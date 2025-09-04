@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>eBay OAuth Test</title>
+</head>
+<body>
+    <h1>eBay OAuth URL Test</h1>
+    
+    <h2>Your Provided Example URL:</h2>
+    <p style="word-break: break-all;">
+        https://auth.sandbox.ebay.com/oauth2/authorize?client_id=AndrewCa-freelist-SBX-f81356df4-4d55eef7&response_type=code&redirect_uri=Andrew_Castella-AndrewCa-freeli-hqlhrupy&scope=https://api.ebay.com/oauth/api_scope...
+    </p>
+    
+    <h2>Corrected URL with ngrok:</h2>
+    <div id="corrected-url"></div>
+    
+    <h2>Test Links:</h2>
+    <button onclick="generateCorrectedUrl()">Generate Corrected OAuth URL</button>
+    <button onclick="testOriginalPattern()">Test Original Pattern</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        function generateCorrectedUrl() {
+            const appId = 'AndrewCa-freelist-SBX-f81356df4-4d55eef7';
+            const redirectUri = 'https://adcf723d0bcc.ngrok-free.app/auth/ebay/callback';
+            
+            const scopes = [
+                'https://api.ebay.com/oauth/api_scope',
+                'https://api.ebay.com/oauth/api_scope/sell.inventory.readonly',
+                'https://api.ebay.com/oauth/api_scope/sell.inventory',
+                'https://api.ebay.com/oauth/api_scope/sell.account.readonly',
+                'https://api.ebay.com/oauth/api_scope/sell.account'
+            ];
+            
+            const params = new URLSearchParams({
+                client_id: appId,
+                response_type: 'code',
+                redirect_uri: redirectUri,
+                scope: scopes.join(' '),
+                state: 'test_' + Date.now()
+            });
+            
+            const correctedUrl = `https://auth.sandbox.ebay.com/oauth2/authorize?${params.toString()}`;
+            
+            document.getElementById('corrected-url').innerHTML = `
+                <p style="word-break: break-all;">
+                    <a href="${correctedUrl}" target="_blank">${correctedUrl}</a>
+                </p>
+            `;
+            
+            document.getElementById('results').innerHTML = `
+                <h3>Generated Corrected URL:</h3>
+                <p>This URL should work if your eBay app is configured with redirect URI: <code>https://adcf723d0bcc.ngrok-free.app/auth/ebay/callback</code></p>
+            `;
+        }
+        
+        function testOriginalPattern() {
+            // Test what happens if we use the runame as redirect_uri (which seems wrong but let's see)
+            const appId = 'AndrewCa-freelist-SBX-f81356df4-4d55eef7';
+            const redirect = 'Andrew_Castella-AndrewCa-freeli-hqlhrupy'; // This is wrong but in your example
+            
+            const params = new URLSearchParams({
+                client_id: appId,
+                response_type: 'code',
+                redirect_uri: redirect,
+                scope: 'https://api.ebay.com/oauth/api_scope',
+                state: 'test_original'
+            });
+            
+            const originalUrl = `https://auth.sandbox.ebay.com/oauth2/authorize?${params.toString()}`;
+            
+            document.getElementById('results').innerHTML = `
+                <h3>Original Pattern URL:</h3>
+                <p style="word-break: break-all;">
+                    <a href="${originalUrl}" target="_blank">${originalUrl}</a>
+                </p>
+                <p><strong>Note:</strong> This uses the runame as redirect_uri which is likely incorrect.</p>
+            `;
+        }
+        
+        // Auto-generate the corrected URL on page load
+        window.onload = function() {
+            generateCorrectedUrl();
+        };
+    </script>
+</body>
+</html>

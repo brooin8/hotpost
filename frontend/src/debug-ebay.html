@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>eBay OAuth Debug</title>
+</head>
+<body>
+    <h1>eBay OAuth URL Generator</h1>
+    <button onclick="generateUrl()">Generate eBay OAuth URL</button>
+    <div id="result"></div>
+    
+    <script>
+        function generateUrl() {
+            const appId = 'AndrewCa-freelist-SBX-f81356df4-4d55eef7';
+            const redirectUri = 'https://adcf723d0bcc.ngrok-free.app/auth/ebay/callback';
+            const scope = 'https://api.ebay.com/oauth/api_scope';
+            const state = 'test_' + Date.now();
+            
+            const params = new URLSearchParams({
+                client_id: appId,
+                redirect_uri: redirectUri,
+                response_type: 'code',
+                scope: scope,
+                state: state
+            });
+            
+            const authUrl = `https://auth.sandbox.ebay.com/oauth2/authorize?${params.toString()}`;
+            
+            document.getElementById('result').innerHTML = `
+                <h3>Generated URL:</h3>
+                <p><a href="${authUrl}" target="_blank">${authUrl}</a></p>
+                <h3>Parameters:</h3>
+                <ul>
+                    <li>App ID: ${appId}</li>
+                    <li>Redirect URI: ${redirectUri}</li>
+                    <li>Scope: ${scope}</li>
+                    <li>State: ${state}</li>
+                </ul>
+            `;
+            
+            console.log('eBay OAuth URL:', authUrl);
+        }
+    </script>
+</body>
+</html>
